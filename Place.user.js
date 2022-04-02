@@ -1,16 +1,16 @@
 // ==UserScript==
-// @name         PlaceDE Bot
-// @namespace    https://github.com/PlaceDE/Bot
-// @version      12
+// @name         PlaceCMC Bot
+// @namespace    https://github.com/cmcBot/PlaceBotCMC
+// @version      1
 // @description  /r/place bot
-// @author       NoahvdAa, reckter, SgtChrome, nama17
+// @author       QUACKS AND COSMO AND LOCHII AND GOD
 // @match        https://www.reddit.com/r/place/*
 // @match        https://new.reddit.com/r/place/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=reddit.com
 // @require	     https://cdn.jsdelivr.net/npm/toastify-js
 // @resource     TOASTIFY_CSS https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css
-// @updateURL    https://github.com/PlaceDE/Bot/raw/main/placedebot.user.js
-// @downloadURL  https://github.com/PlaceDE/Bot/raw/main/placedebot.user.js
+// @updateURL    https://github.com/cmcBot/PlaceBotCMC/raw/main/Place.user.js
+// @downloadURL  https://github.com/cmcBot/PlaceBotCMC/raw/main/Place.user.js
 // @grant        GM_getResourceText
 // @grant        GM_addStyle
 // ==/UserScript==
@@ -162,7 +162,7 @@ async function attemptPlace() {
 }
 
 function updateOrders() {
-	fetch(`https://placede.github.io/pixel/pixel.json`, {cache: "no-store"}).then(async (response) => {
+	fetch(`https://raw.githubusercontent.com/cmcBot/pixel/main/pixel.json`, {cache: "no-store"}).then(async (response) => {
 		if (!response.ok) return console.warn('Bestellungen können nicht geladen werden!');
 		const data = await response.json();
 
@@ -181,11 +181,11 @@ function updateOrders() {
 		if (data?.version !== VERSION && !UPDATE_PENDING) {
 			UPDATE_PENDING = true
 			Toastify({
-				text: `NEUE VERSION VERFÜGBAR! Aktualisiere hier https://github.com/placeDE/Bot/raw/main/placedebot.user.js`,
+				text: `NEUE VERSION VERFÜGBAR! Aktualisiere hier https://github.com/cmcBot/PlaceBotCMC/blob/main/Place.user.js`,
 				duration: -1,
 				onClick: () => {
 					// Tapermonkey captures this and opens a new tab
-					window.location = 'https://github.com/placeDE/Bot/raw/main/placedebot.user.js'
+					window.location = 'https://github.com/cmcBot/PlaceBotCMC/raw/main/Place.user.js'
 				}
 			}).showToast();
 
