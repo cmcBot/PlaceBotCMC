@@ -54,7 +54,7 @@ const COLOR_MAPPINGS = {
 (async function () {
 	GM_addStyle(GM_getResourceText('TOASTIFY_CSS'));
 	canvas.width = 2000;
-	canvas.height = 1000;
+	canvas.height = 2000;
 	canvas = document.body.appendChild(canvas);
 
 	Toastify({
@@ -211,8 +211,8 @@ async function place(x, y, color) {
 					'actionName': 'r/replace:set_pixel',
 					'PixelMessageData': {
 						'coordinate': {
-							'x': x % 1000,
-							'y': y % 1000
+							'x': x % 2000,
+							'y': y % 2000
 						},
 						'colorIndex': color,
 						'canvasIndex': (x > 999 ? 1 : 0)
