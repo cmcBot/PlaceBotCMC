@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         PlaceDE Bot
-// @namespace    https://github.com/PlaceDE/Bot
+// @name         PlaceCMC Bot
+// @namespace    https://github.com/cmcBot/PlaceBotCMC
 // @version      16
 // @description  /r/place bot
-// @author       NoahvdAa, reckter, SgtChrome, nama17
+// @author       quacks
 // @match        https://www.reddit.com/r/place/*
 // @match        https://new.reddit.com/r/place/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=reddit.com
