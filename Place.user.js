@@ -1,16 +1,16 @@
 // ==UserScript==
-// @name         PlaceCMC Bot
-// @namespace    https://github.com/cmcBot/PlaceBotCMC
-// @version      3
+// @name         PlaceDE Bot
+// @namespace    https://github.com/PlaceDE/Bot
+// @version      16
 // @description  /r/place bot
-// @author       QUACKS AND COSMO AND LOCHII AND GOD
+// @author       NoahvdAa, reckter, SgtChrome, nama17
 // @match        https://www.reddit.com/r/place/*
 // @match        https://new.reddit.com/r/place/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=reddit.com
 // @require	     https://cdn.jsdelivr.net/npm/toastify-js
 // @resource     TOASTIFY_CSS https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css
-// @updateURL    https://github.com/cmcBot/PlaceBotCMC/raw/main/Place.user.js
-// @downloadURL  https://github.com/cmcBot/PlaceBotCMC/raw/main/Place.user.js
+// @updateURL    https://github.com/PlaceDE/Bot/raw/main/placedebot.user.js
+// @downloadURL  https://github.com/PlaceDE/Bot/raw/main/placedebot.user.js
 // @grant        GM_getResourceText
 // @grant        GM_addStyle
 // ==/UserScript==
@@ -21,34 +21,42 @@ var placeOrders = [];
 var accessToken;
 var canvas = document.createElement('canvas');
 
-const VERSION = 12
+const VERSION = 16
 var UPDATE_PENDING = false;
 
 const COLOR_MAPPINGS = {
+	'#6D001A': 0,
 	'#BE0039': 1,
 	'#FF4500': 2,
 	'#FFA800': 3,
 	'#FFD635': 4,
+	'#FFF8B8': 5,
 	'#00A368': 6,
 	'#00CC78': 7,
 	'#7EED56': 8,
 	'#00756F': 9,
 	'#009EAA': 10,
+	'#00CCC0': 11,
 	'#2450A4': 12,
 	'#3690EA': 13,
 	'#51E9F4': 14,
 	'#493AC1': 15,
 	'#6A5CFF': 16,
+	'#94B3FF': 17,
 	'#811E9F': 18,
 	'#B44AC0': 19,
+	'#E4ABFF': 20,
+	'#DE107F': 21,
 	'#FF3881': 22,
 	'#FF99AA': 23,
 	'#6D482F': 24,
 	'#9C6926': 25,
+	'#FFB470': 26,
 	'#000000': 27,
+	'#515252': 28,
 	'#898D90': 29,
 	'#D4D7D9': 30,
-	'#E9EBED': 31
+	'#FFFFFF': 31
 };
 
 (async function () {
@@ -94,6 +102,9 @@ async function attemptPlace() {
 	try {
 		ctx = await getCanvasFromUrl(await getCurrentImageUrl('0'), canvas, 0, 0);
 		ctx = await getCanvasFromUrl(await getCurrentImageUrl('1'), canvas, 1000, 0)
+		ctx = await getCanvasFromUrl(await getCurrentImageUrl('2'), canvas, 0, 1000)
+		ctx = await getCanvasFromUrl(await getCurrentImageUrl('3'), canvas, 1000, 1000)
+
 	} catch (e) {
 		console.warn('Fehler beim Abrufen der Zeichenfläche:', e);
 		Toastify({
@@ -106,9 +117,6 @@ async function attemptPlace() {
 
 	const pixelList = getPixelList();
 
-	let foundPixel = false;
-	let wrongCount = 0;
-
 	for (const order of pixelList) {
 		const x = order.x;
 		const y = order.y;
@@ -119,10 +127,6 @@ async function attemptPlace() {
 		const currentColorId = COLOR_MAPPINGS[hex];
 		// Pixel already set
 		if (currentColorId == colorId) continue;
-		wrongCount++;
-
-		if (foundPixel) continue;
-		foundPixel = true;
 
 		Toastify({
 			text: `Pixel wird gesetzt auf ${x}, ${y}...`,
@@ -147,17 +151,9 @@ async function attemptPlace() {
 			duration: waitFor
 		}).showToast();
 		setTimeout(attemptPlace, waitFor);
+		return;
 	}
-
-	if	(foundPixel) {
-		console.log( `${wrongCount} sind noch falsch`)
-		return
-	}
-
-	Toastify({
-		text: 'Alle bestellten Pixel haben bereits die richtige Farbe!',
-		duration: 10000
-	}).showToast();
+	
 	setTimeout(attemptPlace, 30000); // probeer opnieuw in 30sec.
 }
 
@@ -181,11 +177,11 @@ function updateOrders() {
 		if (data?.version !== VERSION && !UPDATE_PENDING) {
 			UPDATE_PENDING = true
 			Toastify({
-				text: `NEUE VERSION VERFÜGBAR! Aktualisiere hier https://github.com/cmcBot/PlaceBotCMC/blob/main/Place.user.js`,
+				text: `NEUE VERSION VERFÜGBAR! Aktualisiere hier https://github.com/placeDE/Bot/raw/main/placedebot.user.js`,
 				duration: -1,
 				onClick: () => {
 					// Tapermonkey captures this and opens a new tab
-					window.location = 'https://github.com/cmcBot/PlaceBotCMC/raw/main/Place.user.js'
+					window.location = 'https://github.com/placeDE/Bot/raw/main/placedebot.user.js'
 				}
 			}).showToast();
 
@@ -194,6 +190,10 @@ function updateOrders() {
 	}).catch((e) => console.warn('Bestellungen können nicht geladen werden!', e));
 }
 
+
+function getCanvasId(x,y) {
+	return (x <1000) + (y<1000)*2
+}
 /**
  * Places a pixel on the canvas, returns the "nextAvailablePixelTimestamp", if succesfull
  * @param x
@@ -211,11 +211,11 @@ async function place(x, y, color) {
 					'actionName': 'r/replace:set_pixel',
 					'PixelMessageData': {
 						'coordinate': {
-							'x': x % 2000,
-							'y': y % 2000
+							'x': x % 1000,
+							'y': y % 1000
 						},
 						'colorIndex': color,
-						'canvasIndex': (x > 999 ? 1 : 0)
+						'canvasIndex': getCanvasId(x,y)
 					}
 				}
 			},
