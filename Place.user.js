@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         PlaceCMC Bot
 // @namespace    https://github.com/cmcBot/PlaceBotCMC
-// @version      2
+// @version      3
 // @description  /r/place bot
 // @author       QUACKS AND COSMO AND LOCHII AND GOD
 // @match        https://www.reddit.com/r/place/*
